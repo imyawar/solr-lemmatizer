@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'maven-publish'
+}
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.nicholasding'
+            artifactId = 'solr-lemmatizer'
+            version = '1.0.1'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url ""
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+            content {
+                includeGroupByRegex "com\\.nicholasding\\.*"
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+
+    testImplementation (
+            [group: 'junit', name: 'junit', version: '4.12']
+    )
+
+
+    implementation (
+            [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'],
+            [version: '8.5.1', group: 'org.apache.lucene', name: 'lucene-core'],
+            [version: '8.5.1', group: 'org.apache.lucene', name: 'lucene-analyzers-common'],
+            [version: '8.5.1', group: 'org.apache.lucene', name: 'lucene-test-framework'],
+
+    )
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    maxHeapSize = "4g"
+}
